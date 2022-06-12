@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Net;
+using HtmlAgilityPack;
 
 namespace announceGetter
 {
@@ -24,8 +26,28 @@ namespace announceGetter
             Console.WriteLine(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width);
             // フォームのデスクトップ上の位置とサイズを設定
             this.DesktopBounds = bounds;
-            //タイトルバー削除
+            //タイトルバーを削除
             this.FormBorderStyle = FormBorderStyle.None;
+
+            //リンクからHTMLを取得
+            WebClient wc = new WebClient();
+            wc.Encoding = Encoding.UTF8;
+            string htmlStr = wc.DownloadString("https://sites.google.com/view/trident-hashimoto/");
+            if (htmlStr != null)
+            {
+                Console.WriteLine(htmlStr);
+                var htmlDoc = new HtmlAgilityPack.HtmlDocument();
+                htmlDoc.LoadHtml(htmlStr);
+
+                //divタグの情報が入った物のみ抽出
+                HtmlNodeCollection nodes = htmlDoc.DocumentNode.SelectNodes("//div[@class='tyJCtd mGzaTb baZpAe']");
+                nodes.RemoveAt(nodes.Count - 1);
+                nodes.RemoveAt(nodes.Count - 1);
+                foreach (HtmlNode node in nodes)
+                {
+                    Console.WriteLine("contents:"+node.InnerText);
+                }
+            }
         }
     }
 }
