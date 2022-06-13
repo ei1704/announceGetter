@@ -41,12 +41,18 @@ namespace announceGetter
 
                 //divタグの情報が入った物のみ抽出
                 HtmlNodeCollection nodes = htmlDoc.DocumentNode.SelectNodes("//div[@class='tyJCtd mGzaTb baZpAe']");
+                
+                //リンク集等の最下位二つを削除
                 nodes.RemoveAt(nodes.Count - 1);
                 nodes.RemoveAt(nodes.Count - 1);
                 foreach (HtmlNode node in nodes)
                 {
-                    Console.WriteLine("contents:"+node.InnerText);
+                    Console.WriteLine("content:"+node.InnerText);
+                    //label1.Text += node.InnerText + "\n";
+                    listView1.Items.Add(node.InnerText+"\n");
                 }
+
+
             }
         }
     }
